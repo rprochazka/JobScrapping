@@ -11,13 +11,13 @@
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>ScrappingDefinitionEntry</legend>
+        <legend>Scrapping Definition Entry</legend>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.ScrappingSiteId, "ScrappingSite")
         </div>
         <div class="editor-field">
-            @Html.DropDownList("ScrappingSiteId", String.Empty)
+            @Html.TextBox("ScrappingSiteId", String.Empty)
             @Html.ValidationMessageFor(model => model.ScrappingSiteId)
         </div>
 
@@ -36,6 +36,17 @@
             @Html.EditorFor(model => model.DateCreated)
             @Html.ValidationMessageFor(model => model.DateCreated)
         </div>
+        
+        @for (int i = 0; i < Model.ScrappingFieldDefinitions.Count; i++)
+        {
+            <div class="editor-label">
+                @Html.LabelFor(model => Model.ScrappingFieldDefinitions[i].DefinitionValue, "XPath")
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => Model.ScrappingFieldDefinitions[i].DefinitionValue)
+                @Html.ValidationMessageFor(model => model.ScrappingSiteId)
+            </div>                        
+        }
 
         <p>
             <input type="submit" value="Create" />

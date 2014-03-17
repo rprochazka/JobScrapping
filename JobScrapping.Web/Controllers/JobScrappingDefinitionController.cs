@@ -38,8 +38,24 @@ namespace JobScrapping.Web.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.ScrappingSiteId = new SelectList(db.ScrappingSites, "ScrappingSiteId", "Name");
-            return View();
+            //ViewBag.ScrappingSiteId = new SelectList(db.ScrappingSites, "ScrappingSiteId", "Name");
+
+            var scrappingFieldDefinitions =
+                db.ScrappingFields
+                    .Select(sf =>
+                        new ScrappingFieldDefinition
+                        {
+                            ScrappingFieldId = sf.ScrappingFieldId,
+                            ScrappingField = sf
+                        });
+
+            var scrappingDefinitionEntry = new ScrappingDefinitionEntry
+            {
+                ScrappingFieldDefinitions = scrappingFieldDefinitions.ToList()
+            };
+            return View(scrappingDefinitionEntry);
+
+            //return View();
         }
 
         //

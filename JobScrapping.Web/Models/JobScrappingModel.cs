@@ -40,14 +40,16 @@ namespace JobScrapping.Web.Models
         
         public virtual ScrappingSite ScrappingSite { get; set; }
         public virtual User User { get; set; }
-        public virtual ICollection<ScrappingFieldDefinition> ScrappingFieldDefinitions { get; set; } 
+        public virtual IList<ScrappingFieldDefinition> ScrappingFieldDefinitions { get; set; } 
     }
 
     public class ScrappingFieldDefinition
     {
         public int ScrappingFieldDefinitionId { get; set; }
         public int ScrappingFieldId { get; set; }
-        public int DefinitionValue { get; set; }        
+        public int DefinitionValue { get; set; }
+
+        public virtual ScrappingField ScrappingField { get; set; } 
     }
 
     public class ScrappingFieldDefinitionValidationResult
