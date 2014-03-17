@@ -1,0 +1,45 @@
+﻿@model IEnumerable<JobScrapping.Web.Models.ScrappingDefinitionEntry>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ScrappingSite.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EntryUserId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ScrappingSite.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EntryUserId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ScrappingDefinitionEntryId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ScrappingDefinitionEntryId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ScrappingDefinitionEntryId })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,36 @@
+﻿@model JobScrapping.Web.Models.ScrappingDefinitionEntry
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>ScrappingDefinitionEntry</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ScrappingSite.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ScrappingSite.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.EntryUserId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EntryUserId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DateCreated)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DateCreated)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ScrappingDefinitionEntryId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
