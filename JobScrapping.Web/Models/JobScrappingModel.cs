@@ -47,7 +47,7 @@ namespace JobScrapping.Web.Models
     {
         public int ScrappingFieldDefinitionId { get; set; }
         public int ScrappingFieldId { get; set; }
-        public int DefinitionValue { get; set; }
+        public string DefinitionValue { get; set; }
 
         public virtual ScrappingField ScrappingField { get; set; } 
     }

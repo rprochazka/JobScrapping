@@ -1,6 +1,8 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using JobScrapping.Web.DAL;
 using JobScrapping.Web.Models;
@@ -32,16 +34,32 @@ namespace JobScrapping.Web.Controllers
             }
             return View(scrappingdefinitionentry);
         }
+        
+        // GET: /JobScrappingDefinition/Create/[siteUrl]
+        public ActionResult Create(string siteUrl, string amazonId)
+        {            
+            var url = HttpUtility.UrlDecode(siteUrl);
+            var selectedSite =
+                   db.ScrappingSites.FirstOrDefault(s => s.Url.Equals(url, StringComparison.InvariantCultureIgnoreCase)) 
+                ?? new ScrappingSite {Name = url, Url = url};
+            if (selectedSite.ScrappingSiteId == 0)
+            {
+                db.ScrappingSites.Add(selectedSite);
+            }
 
-        //
-        // GET: /JobScrappingDefinition/Create
+            var selectedUser =
+                db.Users.FirstOrDefault(u => u.AmazonId == amazonId)
+                ?? new User {AmazonId = amazonId};
+            if (selectedUser.UserId == 0)
+            {
+                db.Users.Add(selectedUser);
+            }
+            
+            db.SaveChanges();
 
-        public ActionResult Create()
-        {
-            //ViewBag.ScrappingSiteId = new SelectList(db.ScrappingSites, "ScrappingSiteId", "Name");
-
+            var scrappingFields = db.ScrappingFields.ToList();
             var scrappingFieldDefinitions =
-                db.ScrappingFields
+                scrappingFields
                     .Select(sf =>
                         new ScrappingFieldDefinition
                         {
@@ -51,11 +69,13 @@ namespace JobScrapping.Web.Controllers
 
             var scrappingDefinitionEntry = new ScrappingDefinitionEntry
             {
+                ScrappingSiteId = selectedSite.ScrappingSiteId,
+                ScrappingSite = selectedSite,
+                EntryUserId = selectedUser.UserId,
+                User = selectedUser,
                 ScrappingFieldDefinitions = scrappingFieldDefinitions.ToList()
             };
-            return View(scrappingDefinitionEntry);
-
-            //return View();
+            return View(scrappingDefinitionEntry);            
         }
 
         //

@@ -6,47 +6,32 @@
 
 <h2>Create</h2>
 
+<div>
+    <a href="@Model.ScrappingSite.Url">Go to the site to scrape</a>
+</div>
+
+
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>Scrapping Definition Entry</legend>
+        <legend>Scrapping Definition Entry</legend>                                
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ScrappingSiteId, "ScrappingSite")
-        </div>
-        <div class="editor-field">
-            @Html.TextBox("ScrappingSiteId", String.Empty)
-            @Html.ValidationMessageFor(model => model.ScrappingSiteId)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.EntryUserId)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.EntryUserId)
-            @Html.ValidationMessageFor(model => model.EntryUserId)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateCreated)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateCreated)
-            @Html.ValidationMessageFor(model => model.DateCreated)
-        </div>
-        
         @for (int i = 0; i < Model.ScrappingFieldDefinitions.Count; i++)
         {
             <div class="editor-label">
-                @Html.LabelFor(model => Model.ScrappingFieldDefinitions[i].DefinitionValue, "XPath")
+                @Html.LabelFor(model => Model.ScrappingFieldDefinitions[i].DefinitionValue, Model.ScrappingFieldDefinitions[i].ScrappingField.Name)
             </div>
             <div class="editor-field">
+                @Html.HiddenFor(model => Model.ScrappingFieldDefinitions[i].ScrappingFieldId)
                 @Html.EditorFor(model => Model.ScrappingFieldDefinitions[i].DefinitionValue)
-                @Html.ValidationMessageFor(model => model.ScrappingSiteId)
+                @Html.ValidationMessageFor(model => model.ScrappingFieldDefinitions[i].DefinitionValue)
             </div>                        
         }
+        
+        @Html.HiddenFor(model=> model.ScrappingSiteId)
+        @Html.HiddenFor(model=>model.EntryUserId)        
 
         <p>
             <input type="submit" value="Create" />
