@@ -1,29 +1,34 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using JobScrapping.Data.Entities;
 
-namespace JobScrapping.Data.Mappers
+namespace JobScrapping.Data.Entities
 {
-    internal class ScrappingFieldDefinitionMapper :
+    class ScrappingFieldDefinitionMapper :
         System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<ScrappingFieldDefinition>
     {
         public ScrappingFieldDefinitionMapper()
         {
-            ToTable("ScrappingFieldDefinitions");
-            
+            ToTable("ScrappingFieldDefinition");
+
             Property(c => c.ScrappingFieldDefinitionId)
                 .IsRequired()
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);                            
-            
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            Property(c => c.ScrappingFieldId)
+                .IsRequired();
+
             Property(c => c.DefinitionValue)
                 .IsRequired()
                 .HasMaxLength(255);
 
-            HasKey(c => c.ScrappingFieldDefinitionId);
-            HasKey(c => c.ScrappingFieldId);
-
+            //defines scrappingfield navigation
             HasRequired(e => e.ScrappingField)
                 .WithMany(e => e.ScrappingFieldDefinitions)
                 .HasForeignKey(c => c.ScrappingFieldId);
+
+            //defines scrapping definition entry navigation
+            HasOptional(e => e.ScrappingDefinitionEntry)
+                .WithMany(e => e.ScrappingFieldDefinitions);            
+
         }
     }
 }

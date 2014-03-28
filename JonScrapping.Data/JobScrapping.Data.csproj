@@ -48,27 +48,37 @@
   <ItemGroup>
     <Compile Include="Entities\FailedValidationReason.cs" />
     <Compile Include="Entities\ScrappingDefinitionEntry.cs" />
+    <Compile Include="Mappers\ScrappingDefinitionEntryMapper.cs" />
     <Compile Include="Entities\ScrappingDefinitionValidation.cs" />
     <Compile Include="Entities\ScrappingField.cs" />
     <Compile Include="Entities\ScrappingFieldDefinition.cs" />
+    <Compile Include="Mappers\ScrappingFieldDefinitionMapper.cs" />
     <Compile Include="Entities\ScrappingFieldDefinitionValidationResult.cs" />
     <Compile Include="Entities\ScrappingSite.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Enums\ScrappingFieldType.cs" />
     <Compile Include="Enums\ValidationResult.cs" />
     <Compile Include="IScrappingRepository.cs" />
-    <Compile Include="Mappers\ScrappingFieldDefinitionMapper.cs" />
+    <Compile Include="Mappers\FailedValidationReasonMapper.cs" />
     <Compile Include="Mappers\ScrappingSiteMapper.cs" />
+    <Compile Include="Migrations\201403271626362_jobscrapping.cs" />
+    <Compile Include="Migrations\201403271626362_jobscrapping.Designer.cs">
+      <DependentUpon>201403271626362_jobscrapping.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrappingContext.cs" />
-    <Compile Include="ScrappingContextMigrationConfiguration.cs" />
     <Compile Include="ScrappingRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201403271626362_jobscrapping.resx">
+      <DependentUpon>201403271626362_jobscrapping.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,24 +1,30 @@
 ﻿using System;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using JobScrapping.Web.DAL;
-using JobScrapping.Web.Models;
+using JobScrapping.Data;
+using JobScrapping.Data.Entities;
 
 namespace JobScrapping.Web.Controllers
 {
     public class JobScrappingDefinitionController : Controller
-    {
-        private ScrappingDefinitionContext db = new ScrappingDefinitionContext();
+    {        
+        private readonly IScrappingRepository _repository;
+        public JobScrappingDefinitionController(IScrappingRepository respository)
+        {
+            _repository = respository;
+        }
+
+        public JobScrappingDefinitionController() : this (new ScrappingRepository())
+        {}
 
         //
         // GET: /JobScrappingDefinition/
 
         public ActionResult Index()
         {
-            var scrappingdefinitionentries = db.ScrappingDefinitionEntries.Include(s => s.ScrappingSite);
+            var scrappingdefinitionentries = _repository.GetScrappingDefinitionEntries();
             return View(scrappingdefinitionentries.ToList());
         }
 
@@ -27,7 +33,7 @@ namespace JobScrapping.Web.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            ScrappingDefinitionEntry scrappingdefinitionentry = db.ScrappingDefinitionEntries.Find(id);
+            ScrappingDefinitionEntry scrappingdefinitionentry = _repository.GetScrappingDefinitionEntry(id);
             if (scrappingdefinitionentry == null)
             {
                 return HttpNotFound();
@@ -40,24 +46,24 @@ namespace JobScrapping.Web.Controllers
         {            
             var url = HttpUtility.UrlDecode(siteUrl);
             var selectedSite =
-                   db.ScrappingSites.FirstOrDefault(s => s.Url.Equals(url, StringComparison.InvariantCultureIgnoreCase)) 
-                ?? new ScrappingSite {Name = url, Url = url};
+                      _repository.GetScrappingSiteByUrl(siteUrl)
+                   ?? new ScrappingSite {Name = url, Url = url};
             if (selectedSite.ScrappingSiteId == 0)
             {
-                db.ScrappingSites.Add(selectedSite);
+                _repository.InsertScrappingSite(selectedSite);                
             }
 
             var selectedUser =
-                db.Users.FirstOrDefault(u => u.AmazonId == amazonId)
+                _repository.GetUserByAmazonId(amazonId)
                 ?? new User {AmazonId = amazonId};
             if (selectedUser.UserId == 0)
             {
-                db.Users.Add(selectedUser);
+                _repository.InsertUser(selectedUser);
             }
             
-            db.SaveChanges();
+            _repository.SaveAll();
 
-            var scrappingFields = db.ScrappingFields.ToList();
+            var scrappingFields = _repository.GetScrappingFields().ToList();
             var scrappingFieldDefinitions =
                 scrappingFields
                     .Select(sf =>
@@ -87,12 +93,13 @@ namespace JobScrapping.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.ScrappingDefinitionEntries.Add(scrappingdefinitionentry);
-                db.SaveChanges();
+                _repository.InsertScrappingDefinitionEntry(scrappingdefinitionentry);
+                _repository.SaveAll();
+                
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ScrappingSiteId = new SelectList(db.ScrappingSites, "ScrappingSiteId", "Name", scrappingdefinitionentry.ScrappingSiteId);
+            ViewBag.ScrappingSiteId = new SelectList(_repository.GetScrappingFields(), "ScrappingSiteId", "Name", scrappingdefinitionentry.ScrappingSiteId);
             return View(scrappingdefinitionentry);
         }
 
@@ -101,38 +108,38 @@ namespace JobScrapping.Web.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            ScrappingDefinitionEntry scrappingdefinitionentry = db.ScrappingDefinitionEntries.Find(id);
+            ScrappingDefinitionEntry scrappingdefinitionentry = _repository.GetScrappingDefinitionEntry(id);
             if (scrappingdefinitionentry == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ScrappingSiteId = new SelectList(db.ScrappingSites, "ScrappingSiteId", "Name", scrappingdefinitionentry.ScrappingSiteId);
+            ViewBag.ScrappingSiteId = new SelectList(_repository.GetScrappingFields(), "ScrappingSiteId", "Name", scrappingdefinitionentry.ScrappingSiteId);
             return View(scrappingdefinitionentry);
         }
 
         //
         // POST: /JobScrappingDefinition/Edit/5
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(ScrappingDefinitionEntry scrappingdefinitionentry)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(scrappingdefinitionentry).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.ScrappingSiteId = new SelectList(db.ScrappingSites, "ScrappingSiteId", "Name", scrappingdefinitionentry.ScrappingSiteId);
-            return View(scrappingdefinitionentry);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(ScrappingDefinitionEntry scrappingdefinitionentry)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(scrappingdefinitionentry).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    ViewBag.ScrappingSiteId = new SelectList(db.ScrappingSites, "ScrappingSiteId", "Name", scrappingdefinitionentry.ScrappingSiteId);
+        //    return View(scrappingdefinitionentry);
+        //}
 
         //
         // GET: /JobScrappingDefinition/Delete/5
 
         public ActionResult Delete(int id = 0)
         {
-            ScrappingDefinitionEntry scrappingdefinitionentry = db.ScrappingDefinitionEntries.Find(id);
+            ScrappingDefinitionEntry scrappingdefinitionentry = _repository.GetScrappingDefinitionEntry(id);
             if (scrappingdefinitionentry == null)
             {
                 return HttpNotFound();
@@ -147,15 +154,16 @@ namespace JobScrapping.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            ScrappingDefinitionEntry scrappingdefinitionentry = db.ScrappingDefinitionEntries.Find(id);
-            db.ScrappingDefinitionEntries.Remove(scrappingdefinitionentry);
-            db.SaveChanges();
+            //ScrappingDefinitionEntry scrappingdefinitionentry = _repository.GetScrappingDefinitionEntry(id);
+            _repository.DeleteScrappingDefinitionEntry(id);
+            _repository.SaveAll();
+            
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _repository.Dispose();
             base.Dispose(disposing);
         }
     }

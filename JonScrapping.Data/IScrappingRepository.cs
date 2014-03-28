@@ -1,11 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using JobScrapping.Data.Entities;
 
 namespace JobScrapping.Data
 {
-    interface IScrappingRepository
+    public interface IScrappingRepository : IDisposable
     {
         IQueryable<ScrappingField> GetScrappingFields();
+
+        ScrappingSite GetScrappingSiteByUrl(string url);
+        bool InsertScrappingSite(ScrappingSite scrappingSite);
+
+        User GetUserByAmazonId(string amazonId);
+        bool InsertUser(User user);        
         
         IQueryable<ScrappingDefinitionEntry> GetScrappingDefinitionEntries();
         ScrappingDefinitionEntry GetScrappingDefinitionEntry(int scrappingDefinitionEntryId);

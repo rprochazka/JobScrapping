@@ -10,12 +10,12 @@ namespace JobScrapping.Data
     public class ScrappingContext : DbContext
     {
         public ScrappingContext()
-            : base("ScrappingDbConnection")
+            : base("JobScrapping")
         {
-            Configuration.ProxyCreationEnabled = false;
-            Configuration.LazyLoadingEnabled = false;
+            //Configuration.ProxyCreationEnabled = false;
+            //Configuration.LazyLoadingEnabled = false;
 
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ScrappingContext>, );
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ScrappingContext, ScrappingContextMigrationConfiguration>());
         }
 
         public DbSet<ScrappingSite> ScrappingSites { get; set; }
@@ -26,25 +26,27 @@ namespace JobScrapping.Data
         public DbSet<ScrappingDefinitionEntry> ScrappingDefinitionEntries { get; set; }
         public DbSet<ScrappingDefinitionValidation> ScrappingDefinitionValidations { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Configurations
-                .Add(new ScrappingSiteMapper())
-                .Add(new ScrappingFieldDefinitionMapper());
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Configurations
+        //        .Add(new FailedValidationReasonMapper())
+        //        .Add(new ScrappingDefinitionEntryMapper())
+        //        .Add(new ScrappingSiteMapper())
+        //        .Add(new ScrappingFieldDefinitionMapper());
 
-            base.OnModelCreating(modelBuilder);
-        }        
+        //    base.OnModelCreating(modelBuilder);
+        //}        
 
         public override int SaveChanges()
         {
             try
             {
-                DateTime saveTime = DateTime.Now;
-                foreach (var entry in this.ChangeTracker.Entries().Where(e => e.State == EntityState.Added))
-                {
-                    if (entry.Property("DateCreated").CurrentValue == null)
-                        entry.Property("DateCreated").CurrentValue = saveTime;
-                }
+                //DateTime saveTime = DateTime.Now;
+                //foreach (var entry in this.ChangeTracker.Entries().Where(e => e.State == EntityState.Added))
+                //{
+                //    if (entry.Property("DateCreated").CurrentValue == null)
+                //        entry.Property("DateCreated").CurrentValue = saveTime;
+                //}
                 return base.SaveChanges();
             }
 
@@ -79,6 +81,6 @@ namespace JobScrapping.Data
             }
             
 
-        }
+        }        
     }
 }

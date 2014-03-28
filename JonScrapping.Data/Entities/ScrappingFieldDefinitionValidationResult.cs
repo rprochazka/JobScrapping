@@ -3,8 +3,8 @@
 namespace JobScrapping.Data.Entities
 {
     public class ScrappingFieldDefinitionValidationResult
-    {        
-        public int ScrappingFieldDefinitionId { get; set; }
+    {
+        public int ScrappingFieldDefinitionValidationResultId { get; set; }
         public ValidationResult ValidationResult { get; set; }
         public int? FailedValidationReasonId { get; set; }
 

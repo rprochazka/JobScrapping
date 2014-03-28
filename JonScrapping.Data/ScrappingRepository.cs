@@ -4,16 +4,49 @@ using JobScrapping.Data.Entities;
 
 namespace JobScrapping.Data
 {
-    class ScrappingRepository : IScrappingRepository
+    public class ScrappingRepository : IScrappingRepository
     {
         private readonly ScrappingContext _dbContext;
         public ScrappingRepository(ScrappingContext dbContext)
         {
             _dbContext = dbContext;
         }
+
+        public ScrappingRepository() : this(new ScrappingContext())
+        {}
+
         public IQueryable<ScrappingField> GetScrappingFields()
         {
             return _dbContext.ScrappingFields.AsQueryable();
+        }
+
+        public ScrappingSite GetScrappingSiteByUrl(string url)
+        {
+            return _dbContext.ScrappingSites.SingleOrDefault(s => s.Url.Equals(url, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public bool InsertScrappingSite(ScrappingSite scrappingSite)
+        {
+            try
+            {
+                _dbContext.ScrappingSites.Add(scrappingSite);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public User GetUserByAmazonId(string amazonId)
+        {
+            return _dbContext.Users.SingleOrDefault(u => u.AmazonId == amazonId);
+        }
+
+        public bool InsertUser(User user)
+        {
+            _dbContext.Users.Add(user);
+            return true;
         }
 
         public IQueryable<ScrappingDefinitionEntry> GetScrappingDefinitionEntries()
@@ -82,6 +115,26 @@ namespace JobScrapping.Data
         public bool SaveAll()
         {
             return _dbContext.SaveChanges() > 0;
+        }
+
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _dbContext.Dispose();
+                }
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
