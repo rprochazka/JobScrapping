@@ -1,4 +1,4 @@
-﻿@model JobScrapping.Data.Entities.ScrappingDefinitionEntry
+﻿@model JobScrapping.Web.ViewModels.CreateScrappingViewModel
 
 @{
     ViewBag.Title = "Edit";
@@ -11,38 +11,19 @@
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>ScrappingDefinitionEntry</legend>
-
-        @Html.HiddenFor(model => model.ScrappingDefinitionEntryId)
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ScrappingSiteId, "ScrappingSite")
-        </div>
-        <div class="editor-field">
-            @Html.DropDownList("ScrappingSiteId", String.Empty)
-            @Html.ValidationMessageFor(model => model.ScrappingSiteId)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.EntryUserId)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.EntryUserId)
-            @Html.ValidationMessageFor(model => model.EntryUserId)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateCreated)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateCreated)
-            @Html.ValidationMessageFor(model => model.DateCreated)
-        </div>
-
+        <legend>Scrapping Definition Entry</legend>                                        
+        
+        @Html.EditorFor(model=>model.ScrappingFields, "ScrappingFields")
+        
+        @Html.HiddenFor(model=> model.Site.SiteId)
+        @Html.HiddenFor(model=>model.UserId)                
+    
+    
         <p>
-            <input type="submit" value="Save" />
+            <input type="submit" value="Edit" />
         </p>
-    </fieldset>
+        
+     </fieldset>
 }
 
 <div>

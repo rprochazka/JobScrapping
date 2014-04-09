@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using JobScrapping.Data.Entities;
+﻿using JobScrapping.Data.Entities;
 
 namespace JobScrapping.Data.Mappers
 {
@@ -8,11 +7,7 @@ namespace JobScrapping.Data.Mappers
     {
         public FailedValidationReasonMapper()
         {
-            ToTable("FailedValidationReasons");
-
-            Property(c => c.FailedValidationReasonId)
-                .IsRequired()
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            ToTable("LookupFailedValidationReasons");            
 
             Property(c => c.Name)
                 .IsRequired()

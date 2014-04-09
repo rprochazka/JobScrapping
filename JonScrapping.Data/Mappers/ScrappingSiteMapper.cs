@@ -7,15 +7,7 @@ namespace JobScrapping.Data.Mappers
     {
         public ScrappingSiteMapper()
         {
-            ToTable("ScrappingSites");
-
-            HasKey(c => c.ScrappingSiteId);
-            Property(c => c.ScrappingSiteId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            Property(c => c.ScrappingSiteId).IsRequired();
-
-            Property(c => c.Name).IsRequired();
-
-            Property(c => c.Url).IsRequired();
+            ToTable("LookupScrappingSites");            
         }
     }
 }

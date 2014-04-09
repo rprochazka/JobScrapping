@@ -1,4 +1,4 @@
-﻿@model IEnumerable<JobScrapping.Data.Entities.ScrappingDefinitionEntry>
+﻿@model IEnumerable<JobScrapping.Data.Entities.ScrappingEntry>
 
 @{
     ViewBag.Title = "Index";
@@ -35,9 +35,9 @@
             @Html.DisplayFor(modelItem => item.DateCreated)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ScrappingDefinitionEntryId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ScrappingDefinitionEntryId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ScrappingDefinitionEntryId })
+            @Html.ActionLink("Edit", "Edit", new { id=item.ScrappingEntryId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ScrappingEntryId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ScrappingEntryId })
         </td>
     </tr>
 }

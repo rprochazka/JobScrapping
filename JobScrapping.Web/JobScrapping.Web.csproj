@@ -185,6 +185,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\CreateScrappingViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -293,11 +294,13 @@
     <Content Include="Views\JobScrappingDefinition\Create.cshtml" />
     <Content Include="Views\JobScrappingDefinition\Edit.cshtml" />
     <Content Include="Views\JobScrappingDefinition\Delete.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ScrappingFields.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Filters\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Shared\DisplayTemplates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

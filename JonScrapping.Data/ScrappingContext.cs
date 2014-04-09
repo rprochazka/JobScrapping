@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
 using System.Linq;
 using JobScrapping.Data.Entities;
@@ -10,10 +11,10 @@ namespace JobScrapping.Data
     public class ScrappingContext : DbContext
     {
         public ScrappingContext()
-            : base("JobScrapping")
+            : base("JobScrappingConnection")           
         {
-            //Configuration.ProxyCreationEnabled = false;
-            //Configuration.LazyLoadingEnabled = false;
+            Configuration.ProxyCreationEnabled = false;
+            Configuration.LazyLoadingEnabled = false;
 
             //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ScrappingContext, ScrappingContextMigrationConfiguration>());
         }
@@ -23,30 +24,34 @@ namespace JobScrapping.Data
         public DbSet<ScrappingField> ScrappingFields { get; set; }
         public DbSet<FailedValidationReason> FailedReasons { get; set; }
 
-        public DbSet<ScrappingDefinitionEntry> ScrappingDefinitionEntries { get; set; }
-        public DbSet<ScrappingDefinitionValidation> ScrappingDefinitionValidations { get; set; }
+        public DbSet<ScrappingEntry> ScrappingEntries { get; set; }
+        public DbSet<ScrappingValidation> ScrappingValidations { get; set; }
 
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Configurations
-        //        .Add(new FailedValidationReasonMapper())
-        //        .Add(new ScrappingDefinitionEntryMapper())
-        //        .Add(new ScrappingSiteMapper())
-        //        .Add(new ScrappingFieldDefinitionMapper());
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Configurations
+                .Add(new FailedValidationReasonMapper())
+                .Add(new ScrappingEntryMapper())
+                .Add(new ScrappingSiteMapper())
+                .Add(new ScrappingFieldEntryMapper())
+                .Add(new ScrappingValidationMapper());
 
-        //    base.OnModelCreating(modelBuilder);
-        //}        
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
+            base.OnModelCreating(modelBuilder);
+        }        
 
         public override int SaveChanges()
         {
             try
             {
-                //DateTime saveTime = DateTime.Now;
-                //foreach (var entry in this.ChangeTracker.Entries().Where(e => e.State == EntityState.Added))
-                //{
-                //    if (entry.Property("DateCreated").CurrentValue == null)
-                //        entry.Property("DateCreated").CurrentValue = saveTime;
-                //}
+                var changedEntries = this.ChangeTracker.Entries().ToList();
+                foreach (var entry in changedEntries)
+                {
+                    Debug.WriteLine("Entry {0} is on state {1}" + entry.State, entry.Entity.ToString());
+                }
+
+                
                 return base.SaveChanges();
             }
 
@@ -75,7 +80,7 @@ namespace JobScrapping.Data
             {
                 string errorMsg = "Database operation error";
 
-                Debug.WriteLine(errorMsg);
+                Debug.WriteLine("{0}: {1}", errorMsg, ex.Message);
 
                 return 0;
             }

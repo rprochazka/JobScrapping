@@ -14,11 +14,11 @@ namespace JobScrapping.Data
         User GetUserByAmazonId(string amazonId);
         bool InsertUser(User user);        
         
-        IQueryable<ScrappingDefinitionEntry> GetScrappingDefinitionEntries();
-        ScrappingDefinitionEntry GetScrappingDefinitionEntry(int scrappingDefinitionEntryId);
-        bool InsertScrappingDefinitionEntry(ScrappingDefinitionEntry entry);
-        bool UpdateScrappingDefinitionEntry(ScrappingDefinitionEntry originalEntry,
-            ScrappingDefinitionEntry updatedEntry);
+        IQueryable<ScrappingEntry> GetScrappingDefinitionEntries();
+        ScrappingEntry GetScrappingDefinitionEntry(int scrappingDefinitionEntryId);
+        bool InsertScrappingDefinitionEntry(ScrappingEntry entry);
+        bool UpdateScrappingDefinitionEntry(ScrappingEntry originalEntry,
+            ScrappingEntry updatedEntry);
         bool DeleteScrappingDefinitionEntry(int scrappingDefinitionEntryId);
 
         bool SaveAll();

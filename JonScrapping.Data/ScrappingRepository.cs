@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Data.Entity;
 using JobScrapping.Data.Entities;
 
 namespace JobScrapping.Data
@@ -49,29 +50,31 @@ namespace JobScrapping.Data
             return true;
         }
 
-        public IQueryable<ScrappingDefinitionEntry> GetScrappingDefinitionEntries()
+        public IQueryable<ScrappingEntry> GetScrappingDefinitionEntries()
         {
             return _dbContext
-                .ScrappingDefinitionEntries
-                .Include("ScrappingFieldDefinitions")
-                .AsQueryable();
+                    .ScrappingEntries
+                    .Include(e => e.ScrappingFieldEntries)
+                    .Include(e => e.ScrappingFieldEntries.Select(d => d.ScrappingField))
+                    .AsQueryable();
         }
 
-        public ScrappingDefinitionEntry GetScrappingDefinitionEntry(int scrappingDefinitionEntryId)
+        public ScrappingEntry GetScrappingDefinitionEntry(int scrappingDefinitionEntryId)
         {
             return
                 _dbContext
-                    .ScrappingDefinitionEntries
-                    .Include("ScrappingFieldDefinitions")                    
-                    .SingleOrDefault(e => e.ScrappingDefinitionEntryId == scrappingDefinitionEntryId);
-            //.Find(scrappingDefinitionEntryId);
+                    .ScrappingEntries
+                    .Include(e => e.ScrappingFieldEntries)
+                    .Include(e => e.ScrappingFieldEntries.Select(d => d.ScrappingField))
+                    .Include(e=> e.ScrappingSite)
+                    .SingleOrDefault(e => e.ScrappingEntryId == scrappingDefinitionEntryId);            
         }
 
-        public bool InsertScrappingDefinitionEntry(ScrappingDefinitionEntry entry)
+        public bool InsertScrappingDefinitionEntry(ScrappingEntry entry)
         {
             try
             {
-                _dbContext.ScrappingDefinitionEntries.Add(entry);
+                _dbContext.ScrappingEntries.Add(entry);
                 return true;
             }
             catch (Exception)
@@ -80,7 +83,7 @@ namespace JobScrapping.Data
             }
         }
 
-        public bool UpdateScrappingDefinitionEntry(ScrappingDefinitionEntry originalEntry, ScrappingDefinitionEntry updatedEntry)
+        public bool UpdateScrappingDefinitionEntry(ScrappingEntry originalEntry, ScrappingEntry updatedEntry)
         {
             try
             {
@@ -97,10 +100,10 @@ namespace JobScrapping.Data
         {
             try
             {
-                var entity = _dbContext.ScrappingDefinitionEntries.Find(scrappingDefinitionEntryId);
+                var entity = _dbContext.ScrappingEntries.Find(scrappingDefinitionEntryId);
                 if (null != entity)
                 {
-                    _dbContext.ScrappingDefinitionEntries.Remove(entity);
+                    _dbContext.ScrappingEntries.Remove(entity);
                     return true;
                 }
             }

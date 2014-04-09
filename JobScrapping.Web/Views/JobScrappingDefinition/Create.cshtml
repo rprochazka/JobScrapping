@@ -1,4 +1,4 @@
-﻿@model JobScrapping.Data.Entities.ScrappingDefinitionEntry
+﻿@model JobScrapping.Web.ViewModels.CreateScrappingViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -7,7 +7,7 @@
 <h2>Create</h2>
 
 <div>
-    <a href="@Model.ScrappingSite.Url">Go to the site to scrape</a>
+    <a href="@Model.Site.SiteUrl">Go to the site to scrape</a>
 </div>
 
 
@@ -16,27 +16,20 @@
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>Scrapping Definition Entry</legend>                                
-
-        @for (int i = 0; i < Model.ScrappingFieldDefinitions.Count; i++)
-        {
-            <div class="editor-label">
-                @Html.LabelFor(model => Model.ScrappingFieldDefinitions[i].DefinitionValue, Model.ScrappingFieldDefinitions[i].ScrappingField.Name)
-            </div>
-            <div class="editor-field">
-                @Html.HiddenFor(model => Model.ScrappingFieldDefinitions[i].ScrappingFieldId)
-                @Html.EditorFor(model => Model.ScrappingFieldDefinitions[i].DefinitionValue)
-                @Html.ValidationMessageFor(model => model.ScrappingFieldDefinitions[i].DefinitionValue)
-            </div>                        
-        }
+        <legend>Scrapping Definition Entry</legend>                                        
         
-        @Html.HiddenFor(model=> model.ScrappingSiteId)
-        @Html.HiddenFor(model=>model.EntryUserId)        
-
+        @Html.EditorFor(model=>model.ScrappingFields, "ScrappingFields")
+        
+        @Html.HiddenFor(model=> model.Site.SiteId)
+        @Html.HiddenFor(model=>model.UserId)                
+    
+    
         <p>
             <input type="submit" value="Create" />
         </p>
-    </fieldset>
+        
+     </fieldset>
+    
 }
 
 <div>
